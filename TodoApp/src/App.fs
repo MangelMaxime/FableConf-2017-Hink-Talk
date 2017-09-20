@@ -8,6 +8,16 @@ open Hink.Inputs
 open Hink.Widgets
 open System
 
+/////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
+/////
+///// IMPORTANT: This application is just to demonstrate Hink potentail
+/////                    and serve as a demo for FableConf
+/////          This doesn't represent final application written with Hink !!!
+/////
+/////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
+
 let canvas = Browser.document.getElementById "application" :?> Browser.HTMLCanvasElement
 
 let mainWindow = { WindowInfo.Default with Width = 1024.
@@ -32,7 +42,7 @@ type EditWindow =
           Input = { InputInfo.Default with Value = title } }
 
 type Note =
-    { Title : string
+    { mutable Title : string
       Guid : Guid
       StateCheckbox : CheckboxInfo
       EditWindow : EditWindow }
@@ -80,6 +90,16 @@ type AppState () as this =
             not note.EditWindow.Window.Closed
         )
 
+    member this.OpenDetailWindow guid =
+        this.NewNoteInput.IsActive <- false
+        for note in this.Notes do
+            if note.Guid = guid then
+                note.EditWindow.Window.Closed <- false
+            else
+                note.EditWindow.Window.Closed <- true
+                note.EditWindow.Input.IsActive <- false
+
+
 let appState = AppState()
 
 appState.Add("Create a demo app for #FableConf", true)
@@ -107,12 +127,14 @@ let rec render (_: float) =
     for note in appState.Notes do
         ui.Row([| 1./15.; 1./15.; 7./15.; 1./15.; 2./15.; 2./15.; 1./15. |])
         ui.Empty()
-        ui.Checkbox(note.StateCheckbox) |> ignore
+        if ui.Checkbox(note.StateCheckbox) then
+            if not note.EditWindow.Window.Closed then
+                note.EditWindow.Window.ShouldRedraw <- true
         ui.Label(note.Title)
         ui.Empty()
 
         if ui.Button("Edit") then
-            note.EditWindow.Window.Closed <- false
+            appState.OpenDetailWindow note.Guid
 
         if ui.Button("Delete") then
             appState.Remove(note.Guid)
@@ -122,7 +144,9 @@ let rec render (_: float) =
     for note in appState.GetDetailsWindows() do
         if ui.Window(note.EditWindow.Window, "#9b59b6") then
             ui.Label("Edit title:")
-            ui.Input(note.EditWindow.Input) |> ignore
+            if ui.Input(note.EditWindow.Input) then
+                note.Title <- note.EditWindow.Input.Value
+                note.EditWindow.Window.Title <- Some note.EditWindow.Input.Value
             ui.Empty()
 
             ui.Row([|1./4.; 1./2.; 1./4.|])

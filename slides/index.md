@@ -102,13 +102,36 @@ Maxime Mangel - [@mangelmaxime](http://www.twitter.com/mangelmaxime)
 
 ## Key concepts
 
-### Minimal theming
+### Key handler & application shortcut
 
 ```fs
-    Button =
-        { Width = 80.
+fun keyboard ->
+    match keyboard.Modifiers with
+    | { Control = true } ->
+        match keyboard.LastKey with
+        | Keyboards.Keys.N ->
+            Browser.console.log("Create a new ...")
+            true
+    | _ ->
+        match keyboard.LastKey with
+        | Keyboard.Keys.Enter ->
+            Browser.console.log("Enter pressed")
+            true
+        | _ -> false
+```
+
+---
+
+## Key concepts
+
+### Minimal theming
+
+*Planned*
+```fs
+    Element =
+        { CornerRadius = 4.
           Height = 34.
-          CornerRadius = 4.
+          SeparatorSize = 2.
           Background =
             { Pressed = Color.rgb 22 160 133
               Hover = Color.rgb 72 201 176

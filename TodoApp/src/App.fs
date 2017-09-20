@@ -24,8 +24,6 @@ let mainWindow = { WindowInfo.Default with Width = 1024.
                                            Height = 600.
                                            Title = Some "Main window" }
 
-let comboDisplay = { ComboInfo.Default with SelectedIndex = Some 0 }
-
 type EditWindow =
     { Window : WindowInfo
       Input : InputInfo }
@@ -56,6 +54,7 @@ type Note =
 type AppState () as this =
     let newNoteInput : InputInfo = InputInfo.Default
     let mutable notes : Note list = []
+    let filters = ComboInfo.Default
 
     do
         newNoteInput.KeyboardCaptureHandler <-
@@ -76,6 +75,8 @@ type AppState () as this =
 
     member this.NewNoteInput = newNoteInput
 
+    member this.Filters = filters
+
     member this.Add (title, ?completed) =
         this.Notes <- Note.Create(title, ?completed = completed) :: this.Notes
 
@@ -90,6 +91,20 @@ type AppState () as this =
             not note.EditWindow.Window.Closed
         )
 
+    member this.FilteredNotes
+        with get () =
+            match this.Filters.SelectedIndex with
+            | None | Some 0 ->
+                this.Notes
+            | Some 1 ->
+                this.Notes
+                |> List.filter(fun note -> not note.StateCheckbox.Value )
+            | Some 2 ->
+                this.Notes
+                |> List.filter(fun note -> note.StateCheckbox.Value )
+            | Some index ->
+                 failwithf "Unkown index: %i" index
+
     member this.OpenDetailWindow guid =
         this.NewNoteInput.IsActive <- false
         for note in this.Notes do
@@ -98,7 +113,6 @@ type AppState () as this =
             else
                 note.EditWindow.Window.Closed <- true
                 note.EditWindow.Input.IsActive <- false
-
 
 let appState = AppState()
 
@@ -115,16 +129,16 @@ let rec render (_: float) =
     ui.Prepare()
 
     if ui.Window(mainWindow) then
-        ui.Row([|1./6.; 3./6.; 1./6.; 1./6.|])
+        ui.Row([|1./6.; 1./6.; 3./6.; 1./6.|])
         ui.Empty()
-        ui.Input(appState.NewNoteInput) |> ignore
-        ui.Combo(comboDisplay, ["All"; "Active"; "Completed"], None, labelAlign = Center)
+        ui.Combo(appState.Filters, ["All"; "Active"; "Completed"], Some "Filter", labelAlign = Center)
         |> ignore
+        ui.Input(appState.NewNoteInput) |> ignore
         ui.Empty()
         // Make space between input and list
         ui.Empty()
 
-    for note in appState.Notes do
+    for note in appState.FilteredNotes do
         ui.Row([| 1./15.; 1./15.; 7./15.; 1./15.; 2./15.; 2./15.; 1./15. |])
         ui.Empty()
         if ui.Checkbox(note.StateCheckbox) then

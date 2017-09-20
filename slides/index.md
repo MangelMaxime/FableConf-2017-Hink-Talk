@@ -45,6 +45,11 @@ Maxime Mangel - [@mangelmaxime](http://www.twitter.com/mangelmaxime)
 
 ### I don't like CSS
 
+Faire un historique ici
+ - Dev full stack
+ - Templating beurk
+ - etc.
+
 ***
 
 ## Why Hink ?
@@ -141,6 +146,15 @@ fun keyboard ->
 ***
 
 ### Demo
+
+***
+
+### Next step ?
+
+- ...
+- ...
+- ...
+- ...
 
 ***
 

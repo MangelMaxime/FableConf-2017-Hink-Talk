@@ -18,7 +18,7 @@ let screenHeight = 600.
 
 // Variables to mutate for demo
 let mutable quantity = 1000
-let speedFactorInput = InputInfo.Default
+let speedFactorInput = { InputInfo.Default with Value = "4" }
 
 type Helper =
     class end
@@ -42,8 +42,6 @@ type Particle =
         this.Position.X <- this.Position.X + this.Velocity.X
         this.Position.Y <- this.Position.Y + this.Velocity.Y
 
-        // printfn "Position: %A" this.Position.X
-        // printfn "Screen: %A" screenWidth
         if this.Position.X < 0. || this.Position.X > screenWidth then
             this.Velocity.X <- -this.Velocity.X
 
@@ -79,64 +77,17 @@ let createParticles () =
 let canvas = Browser.document.getElementById "application" :?> Browser.HTMLCanvasElement
 let context = canvas.getContext_2d()
 
-
-let mainWindow = { WindowInfo.Default with Width = 300.
-                                           Height = 600.
-                                           Title = Some "Particle editor" }
-let ui = Hink.Create(canvas)
-
 // Init the particles
 createParticles()
 
-speedFactorInput.KeyboardCaptureHandler <- Some (fun inputInfo keyboard ->
-                                                match keyboard.Modifiers with
-                                                | _ ->
-                                                    match keyboard.LastKey with
-                                                    | Keyboard.Keys.ArrowUp ->
-                                                        inputInfo.Value <- string (Helper.SpeedFactor + 1.)
-                                                        true
-                                                    | Keyboard.Keys.ArrowDown ->
-                                                        inputInfo.Value <- string (Helper.SpeedFactor - 1.)
-                                                        true
-                                                    | _ -> false )
-
-
 let rec render (_: float) =
 
-    ui.ApplicationContext.clearRect(0., 0., ui.Canvas.width, ui.Canvas.height)
+    context.clearRect(0., 0., canvas.width, canvas.height)
     // ui.ApplicationContext.fillStyle <- !^"#fff"
 
     for particle in particles do
         particle.Update()
         particle.Draw(context)
-
-    ui.Prepare()
-
-    if ui.Window(mainWindow) then
-        ui.Label("Quantity:")
-
-        ui.Row(([| 1./2.; 1./2. |]))
-        if ui.Button("+100") then
-            quantity <- quantity + 100
-            createParticles()
-
-        if ui.Button("-100") then
-            quantity <- quantity - 100
-            createParticles()
-
-        ui.Label("Speed factor:")
-        let previousSpeedFactor = speedFactorInput.Value
-        if ui.Input(speedFactorInput) then
-            if speedFactorInput.Value <> previousSpeedFactor then
-                createParticles()
-
-        if ui.Button("Reset") then
-            speedFactorInput.Value <- "4"
-            quantity <- 1000
-            createParticles()
-
-
-    ui.Finish()
 
     Browser.window.requestAnimationFrame(Browser.FrameRequestCallback(render))
     |> ignore

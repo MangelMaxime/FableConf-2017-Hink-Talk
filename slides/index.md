@@ -23,15 +23,14 @@ Maxime Mangel - [@mangelmaxime](http://www.twitter.com/mangelmaxime)
 
 * Contributor to Fable ecosystem
 * Maintainer of:
-    * Fulma
-    * Fulma.Extensions
-    * Fulma.Elmish
+    * Elmish templates
+    * Fulma projects
     * Hink
 
 ***
 
-* Why Hink ?
-    * I don't like CSS
+* Why a new GUI ?
+    * Alternative is good
     * Retained mode versus Immediate mode
 * Key concepts
     * Immediate mode
@@ -43,14 +42,11 @@ Maxime Mangel - [@mangelmaxime](http://www.twitter.com/mangelmaxime)
 
 ## Why Hink ?
 
-### I don't like CSS
+* HTML + CSS is not always the solution
+* Easier integration for canvas based app
+* Experimenting is fun
 
-Faire un historique ici
- - Dev full stack
- - Templating beurk
- - etc.
-
-***
+---
 
 ## Why Hink ?
 
@@ -67,6 +63,10 @@ Faire un historique ici
 <img src="images/immediate-mode.png" style="background: transparent; border-style: none;"  width=700 />
 
 ***
+
+## Key concepts
+
+---
 
 ## Key concepts
 
@@ -145,28 +145,40 @@ fun keyboard ->
 
 ***
 
-### Demo
+## Demo
+
+***
+
+### Today Hink is:
+
+* 1.000 lines for the *Core*
+* 250 + 150 lines for *Inputs abstraction*
+* A record of 100 lines for the *Theming*
+
+***
+
+
+## Goals
+
+* Fast prototype
+* Easy integration
+* Focus on your app not the design
 
 ***
 
 ### Next step ?
 
-- ...
-- ...
-- ...
-- ...
-
-***
-
-### TakeAways
-
-* Learn all the FP you can!
-* Simple modular design
+- Finish window layout
+- More widgets
+    - Tabs
+    - Canvas free
+- Rework the theming system
+- Focus on user experience
 
 ***
 
 ### Thank you!
 
-* https://github.com/MangelMaxime/Hink
 * https://ionide.io
 * http://fable.io
+* https://github.com/MangelMaxime/Hink

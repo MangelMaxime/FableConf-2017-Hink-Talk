@@ -27,10 +27,7 @@
 
     ui.Finish()
 
-
 speedFactorInput.KeyboardCaptureHandler <- Some (fun inputInfo keyboard ->
-                                                match keyboard.Modifiers with
-                                                | _ ->
                                                     match keyboard.LastKey with
                                                     | Keyboard.Keys.ArrowUp ->
                                                         inputInfo.Value <- string (Helper.SpeedFactor + 1.)

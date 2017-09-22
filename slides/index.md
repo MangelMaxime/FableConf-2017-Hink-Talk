@@ -98,7 +98,7 @@ Maxime Mangel - [@mangelmaxime](http://www.twitter.com/mangelmaxime)
 ```fs
     ui.Row([| 1./3.; 1./3.; 1./3. |])
     if ui.Button("Click me") then
-        console.log("You clicked on the button")
+        counterValue <- counterValue + 1
     ui.Empty()
     ui.Label("Counter value: " + string counterValue)
 ```
@@ -179,6 +179,5 @@ fun keyboard ->
 
 ### Thank you!
 
-* https://ionide.io
-* http://fable.io
 * https://github.com/MangelMaxime/Hink
+* https://twitter.com/mangelmaxime
